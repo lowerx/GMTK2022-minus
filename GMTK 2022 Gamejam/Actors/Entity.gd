@@ -1,5 +1,8 @@
 extends KinematicBody2D
 
+onready var player = get_node("/root/World/Player")
+onready var Main = get_node("/root/World")
+
 # "CONSTANTS"
 export var SPEED = 0
 export var TYPE = "ENEMY"
@@ -10,6 +13,12 @@ onready var DAMAGE = null
 var movedir = Vector2.ZERO
 var knockdir = Vector2.ZERO
 var spritedir = "down"
+var movetimer = 0
+var movetimer_length = 0
+var movetimer_range
+var movetarget_radius
+var movetarget_radius_range
+var rng = RandomNumberGenerator.new()
 
 var hitstun = 0
 var health = 1
@@ -73,3 +82,44 @@ func damage_loop():
 			# set knockdir to the opposite of the entity approached
 			# the body from
 			knockdir = transform.origin - body.transform.origin
+
+func rand_direction(dir_list):
+	var random_dir_list = []
+	if "horizontal" in dir_list:
+		random_dir_list.append(Vector2.LEFT)
+		random_dir_list.append(Vector2.RIGHT)
+	if "vertical" in dir_list:
+		random_dir_list.append(Vector2.UP)
+		random_dir_list.append(Vector2.DOWN)
+	if "diagonal" in dir_list:
+		random_dir_list.append(Vector2.LEFT + Vector2.UP)
+		random_dir_list.append(Vector2.RIGHT + Vector2.UP)
+		random_dir_list.append(Vector2.LEFT + Vector2.DOWN)
+		random_dir_list.append(Vector2.RIGHT + Vector2.DOWN)
+
+	var index = randi() % random_dir_list.size()
+	# return a random element from the list
+	return(random_dir_list[index])
+
+func reset_movetimer(flag_list = []):
+	if movetimer_range and not "ignore_range" in flag_list:
+		# return a random number between movetimer_range[0] and movetimer_range[1] inclusive
+		movetimer = rng.randi_range(movetimer_range[0], movetimer_range[1])
+	else:
+		movetimer = movetimer_length
+
+func loop_random_direction(dir_list, flag_list = []):
+	if movetimer > 0:
+		movetimer -= 1
+	if movetimer == 0 || is_on_wall():
+		movedir = rand_direction(dir_list)
+		reset_movetimer(flag_list)
+
+
+func loop_follow_target(target = player):
+	var multiplier = 0
+	if movetimer > 0:
+		movetimer -= 1
+	if movetimer == 0 || is_on_wall():
+		var targetdir = target.global_position - global_position
+		movedir = targetdir.normalized()
