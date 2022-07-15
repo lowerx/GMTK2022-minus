@@ -1,6 +1,7 @@
 extends Node2D
 
-onready var tiles = $TileMap
+onready var tiles = $"Background TileMap"
+onready var blocks = $"PhysicalLayer Tilemap"
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -9,8 +10,8 @@ onready var tiles = $TileMap
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	var xHeight = floor(rand_range(7,15))
-	var yHeight = floor(rand_range(7,10))
+	var xHeight = floor(rand_range(10,20))
+	var yHeight = floor(rand_range(5,15))
 	for y in yHeight:
 		y += 1
 		for x in xHeight:
@@ -36,6 +37,8 @@ func _ready():
 				if x == 0:
 					tiles.set_cell(x,y,8)
 			x += 1
+	blocks.set_cell(floor(rand_range(10,xHeight)), floor(rand_range(5,yHeight)),0)
+	blocks.set_cell(floor(rand_range(10,xHeight)), floor(rand_range(5,yHeight)),0)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
