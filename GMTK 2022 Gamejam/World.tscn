@@ -1,11 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://World.gd" type="Script" id=1]
 [ext_resource path="res://Serene_Village_16x16.png" type="Texture" id=2]
-[ext_resource path="res://Actors/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Actors/Enemy.tscn" type="PackedScene" id=4]
 
-[sub_resource type="TileSet" id=1]
+[sub_resource type="ConvexPolygonShape2D" id=1]
+points = PoolVector2Array( 2.53857, 3.17906, 14.5949, 2.69682, 14.1126, 13.3064, 2.05632, 14.2709 )
+
+[sub_resource type="TileSet" id=2]
 0/name = "Serene_Village_16x16.png 0"
 0/texture = ExtResource( 2 )
 0/tex_offset = Vector2( 0, 0 )
@@ -132,19 +133,66 @@
 8/shape_one_way_margin = 0.0
 8/shapes = [  ]
 8/z_index = 0
+9/name = "Serene_Village_16x16.png 9"
+9/texture = ExtResource( 2 )
+9/tex_offset = Vector2( 0, 0 )
+9/modulate = Color( 1, 1, 1, 1 )
+9/region = Rect2( 0, 240, 16, 16 )
+9/tile_mode = 0
+9/occluder_offset = Vector2( 0, 0 )
+9/navigation_offset = Vector2( 0, 0 )
+9/shape_offset = Vector2( 0, 0 )
+9/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+9/shape = SubResource( 1 )
+9/shape_one_way = false
+9/shape_one_way_margin = 1.0
+9/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 1 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+9/z_index = 0
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+points = PoolVector2Array( 13.6304, 13.7924, 3.02083, 13.7924, 3.02083, 3.18286, 13.6304, 3.18286 )
+
+[sub_resource type="TileSet" id=4]
+0/name = "Serene_Village_16x16.png 0"
+0/texture = ExtResource( 2 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 240, 16, 16 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape = SubResource( 3 )
+0/shape_one_way = false
+0/shape_one_way_margin = 1.0
+0/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 3 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+0/z_index = 0
 
 [node name="World" type="Node2D"]
 script = ExtResource( 1 )
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="Background TileMap" type="TileMap" parent="."]
 scale = Vector2( 2, 2 )
-tile_set = SubResource( 1 )
+tile_set = SubResource( 2 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 format = 1
 
-[node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 304, 120 )
-
-[node name="Enemy" parent="." instance=ExtResource( 4 )]
-position = Vector2( 144, 232 )
+[node name="PhysicalLayer Tilemap" type="TileMap" parent="."]
+tile_set = SubResource( 4 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
+format = 1
