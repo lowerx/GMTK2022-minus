@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
-onready var player = get_node("/root/World/Player")
-onready var Main = get_node("/root/World")
+onready var player = get_parent().get_node("Player")
 
 # "CONSTANTS"
 export var SPEED = 0

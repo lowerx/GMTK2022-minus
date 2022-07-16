@@ -14,15 +14,15 @@ func _ready():
 
 # _physics_process is called by the game engine
 func _physics_process(delta):
-	controls_loop()
 	movement_loop()
 	spritedir_loop()
 	damage_loop()
+	controls_loop()
 
-	#if movedir == Vector2.ZERO:
-		#anim_switch("idle")
-	#else:
-		#anim_switch("walk")
+	if movedir == Vector2.ZERO:
+		anim_switch("idle")
+	else:
+		anim_switch("walk")
 
 # controls_loop looks for player input
 func controls_loop():
@@ -45,12 +45,6 @@ func controls_loop():
 		$AttackBox/CollisionShape2D.disabled = true
 		yield(get_tree().create_timer(attack_time), "timeout")
 		cooldown = false
-	
-	if LEFT or RIGHT or UP or DOWN:
-		anim_switch("walk")
-	
-	if not (LEFT or RIGHT or UP or DOWN):
-		anim_switch("idle")
 
 	# By adding our values together, we make it so that one key
 	# stroke does not take precidence over another, i.e. pushing
