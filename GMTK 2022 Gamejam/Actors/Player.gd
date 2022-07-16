@@ -21,10 +21,8 @@ func _physics_process(delta):
 
 	if movedir == Vector2.ZERO:
 		anim_switch("idle")
-	elif movedir == Vector2.RIGHT:
+	else:
 		anim_switch("walk")
-	elif movedir == Vector2.LEFT:
-		anim_switch("walk", true)
 
 # controls_loop looks for player input
 func controls_loop():
@@ -56,3 +54,7 @@ func controls_loop():
 
 func die():
 	get_tree().reload_current_scene()
+
+
+func _on_ChestBox_area_entered(area: Area2D) -> void:
+	pass # Replace with function body.

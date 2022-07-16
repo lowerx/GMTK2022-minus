@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Actors/Player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -70,6 +70,9 @@ tracks/1/keys = {
 "values": [ -10.0, 0.0, 10.0, 0.0 ]
 }
 
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 20, 20 )
+
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
 script = ExtResource( 1 )
@@ -106,3 +109,12 @@ disabled = true
 [node name="anim" type="AnimationPlayer" parent="."]
 anims/idle = SubResource( 7 )
 anims/walk = SubResource( 8 )
+
+[node name="ChestBox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChestBox"]
+shape = SubResource( 9 )
+
+[connection signal="area_entered" from="ChestBox" to="." method="_on_ChestBox_area_entered"]
