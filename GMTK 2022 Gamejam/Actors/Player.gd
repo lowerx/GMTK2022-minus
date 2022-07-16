@@ -2,6 +2,9 @@ extends "res://Actors/Entity.gd"
 
 var attackBoxStartPosition
 
+export var attack_time = 0.3
+var cooldown = false
+
 # ready function lets us set "constants" when the file loads
 func _ready():
 	SPEED = 100
@@ -35,8 +38,19 @@ func controls_loop():
 	if LEFT:
 		$AttackBox/CollisionShape2D.position.x = -attackBoxStartPosition.x
 		
-	if ATTACK:
-		anim_switch("attack")
+	if ATTACK and not cooldown:
+		cooldown = true
+		$AttackBox/CollisionShape2D.disabled = false
+		yield(get_tree().create_timer(attack_time), "timeout")
+		$AttackBox/CollisionShape2D.disabled = true
+		yield(get_tree().create_timer(attack_time), "timeout")
+		cooldown = false
+	
+	if LEFT or RIGHT or UP or DOWN:
+		anim_switch("walk")
+	
+	if not (LEFT or RIGHT or UP or DOWN):
+		anim_switch("idle")
 
 	# By adding our values together, we make it so that one key
 	# stroke does not take precidence over another, i.e. pushing

@@ -5,18 +5,19 @@ var chasing_player = false
 func _ready() -> void:
 	SPEED = 50
 	DAMAGE = 1
-	movetimer = 10
+	movetimer = 100
 	movetimer_length = 100
 
 func _physics_process(delta):
 	movement_loop()
 	damage_loop()
-	if chasing_player:
-		loop_follow_target()
+	if hitstun <= 0:
+		if chasing_player:
+			loop_follow_target()
+		else:
+			loop_random_direction(["horizontal", "diagonal", "vertical"])
 	else:
-		loop_random_direction(["horizontal", "diagonal", "vertical"])
-
-
+		anim_switch("idle")
 
 func _on_PlayerDetection_body_entered(body: Node) -> void:
 	if body.get_name() == "Player":

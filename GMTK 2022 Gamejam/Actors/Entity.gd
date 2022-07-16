@@ -13,7 +13,7 @@ onready var HITSTUN = 10
 # MOVEMENT
 var movedir = Vector2.ZERO
 var knockdir = Vector2.ZERO
-var spritedir = "down"
+var spritedir = "left"
 var movetimer = 0
 var movetimer_length = 0
 var movetimer_range
@@ -39,6 +39,7 @@ func movement_loop():
 		motion = movedir.normalized() * SPEED
 	else:
 		motion = knockdir.normalized() * SPEED * 1.5
+		anim_switch("idle")
 
 
 	# move_and_slide takes care of collisions and has you slide
@@ -54,20 +55,13 @@ func spritedir_loop():
 			spritedir = "left"
 		Vector2.RIGHT:
 			spritedir = "right"
-		Vector2.UP:
-			spritedir = "up"
-		Vector2.DOWN:
-			spritedir = "down"
 
 # This changes our player animation.  "animation" is a string
 # of the sort "idle", "push", or "walk"
 func anim_switch(animation):
 	
-	var newanim = animation
-	if animation != "attack":
-		newanim = str(animation, spritedir)
-	if $anim.current_animation != newanim:
-		$anim.play(newanim)
+	if $anim.current_animation != animation:
+		$anim.play(animation)
 
 func damage_loop():
 	# If you're in hitstun countdown the timer
@@ -124,6 +118,7 @@ func loop_random_direction(dir_list, flag_list = []):
 		movetimer -= 1
 	if movetimer == 0 || is_on_wall():
 		movedir = rand_direction(dir_list)
+		anim_switch("walk")
 		reset_movetimer(flag_list)
 
 
@@ -133,4 +128,5 @@ func loop_follow_target(target = player):
 		movetimer -= 1
 	if movetimer == 0 || is_on_wall():
 		var targetdir = target.global_position - global_position
+		anim_switch("walk")
 		movedir = targetdir.normalized()

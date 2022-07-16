@@ -200,7 +200,7 @@ cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 format = 1
 
 [node name="Enemy" parent="." instance=ExtResource( 4 )]
-position = Vector2( 344, 192 )
+position = Vector2( 264, 184 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 520, 184 )
+position = Vector2( 432, 184 )
