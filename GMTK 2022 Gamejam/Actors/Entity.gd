@@ -8,6 +8,7 @@ export var SPEED = 0
 export var TYPE = "ENEMY"
 # have to declare damage here so we can set it in the child scripts
 onready var DAMAGE = null
+onready var HITSTUN = 10
 
 # MOVEMENT
 var movedir = Vector2.ZERO
@@ -61,7 +62,10 @@ func spritedir_loop():
 # This changes our player animation.  "animation" is a string
 # of the sort "idle", "push", or "walk"
 func anim_switch(animation):
-	var newanim = str(animation, spritedir)
+	
+	var newanim = animation
+	if animation != "attack":
+		newanim = str(animation, spritedir)
 	if $anim.current_animation != newanim:
 		$anim.play(newanim)
 
@@ -72,16 +76,23 @@ func damage_loop():
 
 	# for any body that is overlapping the entity's hitbox
 	for body in $HitBox.get_overlapping_bodies():
-		# if the entity isn't already hit, and the body gives damage,
-		# and the body is a different type that the entity
-		if hitstun == 0 and body.get("DAMAGE") != null and body.get("TYPE") != TYPE:
+		handle_damage(body)
+	
+	for area in $HitBox.get_overlapping_areas():
+		handle_damage(area.get_parent())
+
+func handle_damage(body):
+	# if the entity isn't already hit, and the body gives damage,
+	# and the body is a different type that the entity
+	if hitstun == 0 and body.get("DAMAGE") != null and body.get("TYPE") != TYPE:
 			# decrease health by the body's damage
 			health -= body.get("DAMAGE")
 			# Set the hitstun timer
-			hitstun = 10
+			hitstun = HITSTUN
 			# set knockdir to the opposite of the entity approached
 			# the body from
 			knockdir = transform.origin - body.transform.origin
+
 
 func rand_direction(dir_list):
 	var random_dir_list = []

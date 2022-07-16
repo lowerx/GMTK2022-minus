@@ -1,12 +1,32 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Actors/Player.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 16, 16 )
+extents = Vector2( 28, 28 )
 
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 16, 16 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 10, 16 )
+
+[sub_resource type="Animation" id=6]
+resource_name = "attack"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/path = NodePath("AttackBox/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
@@ -17,6 +37,8 @@ scale = Vector2( 0.5, 0.5 )
 shape = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
 
 [node name="HitBox" type="Area2D" parent="."]
 collision_layer = 0
@@ -29,3 +51,15 @@ shape = SubResource( 4 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
+
+[node name="AttackBox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackBox"]
+position = Vector2( 24, 0 )
+shape = SubResource( 5 )
+disabled = true
+
+[node name="anim" type="AnimationPlayer" parent="."]
+anims/attack = SubResource( 6 )

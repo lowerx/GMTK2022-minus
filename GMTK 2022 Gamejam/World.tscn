@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://World.gd" type="Script" id=1]
 [ext_resource path="res://Serene_Village_16x16.png" type="Texture" id=2]
+[ext_resource path="res://Actors/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Actors/Enemy.tscn" type="PackedScene" id=4]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 2.53857, 3.17906, 14.5949, 2.69682, 14.1126, 13.3064, 2.05632, 14.2709 )
@@ -196,3 +198,9 @@ tile_set = SubResource( 4 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )
 format = 1
+
+[node name="Enemy" parent="." instance=ExtResource( 4 )]
+position = Vector2( 344, 192 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 520, 184 )
