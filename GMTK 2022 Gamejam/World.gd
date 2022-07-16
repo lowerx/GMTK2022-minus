@@ -50,7 +50,6 @@ func _ready():
 	#blocks.set_cell(floor(rand_range(10,xHeight)), floor(rand_range(5,yHeight)),0)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	print(playerCoordinates)
 	playerCoordinates = blocks.world_to_map(player.global_position)
 	playerCoordinates.x = floor(playerCoordinates.x / 3 - 1) + 1
 	playerCoordinates.y = floor(playerCoordinates.y / 3)

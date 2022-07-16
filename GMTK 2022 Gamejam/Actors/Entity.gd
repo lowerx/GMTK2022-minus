@@ -80,6 +80,10 @@ func handle_damage(body):
 	if hitstun == 0 and body.get("DAMAGE") != null and body.get("TYPE") != TYPE:
 			# decrease health by the body's damage
 			health -= body.get("DAMAGE")
+			
+			if health <= 0:
+				queue_free()
+			
 			# Set the hitstun timer
 			hitstun = HITSTUN
 			# set knockdir to the opposite of the entity approached
