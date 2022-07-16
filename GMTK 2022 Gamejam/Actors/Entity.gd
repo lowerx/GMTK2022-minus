@@ -57,10 +57,13 @@ func spritedir_loop():
 
 # This changes our player animation.  "animation" is a string
 # of the sort "idle", "push", or "walk"
-func anim_switch(animation):
+func anim_switch(animation, backwards = false):
 	
 	if $anim.current_animation != animation:
-		$anim.play(animation)
+		if backwards:
+			$anim.play_backwards(animation)
+		else:
+			$anim.play(animation)
 
 func damage_loop():
 	# If you're in hitstun countdown the timer
@@ -82,13 +85,16 @@ func handle_damage(body):
 			health -= body.get("DAMAGE")
 			
 			if health <= 0:
-				queue_free()
+				die()
 			
 			# Set the hitstun timer
 			hitstun = HITSTUN
 			# set knockdir to the opposite of the entity approached
 			# the body from
 			knockdir = transform.origin - body.transform.origin
+
+func die():
+	queue_free()
 
 
 func rand_direction(dir_list):

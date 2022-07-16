@@ -21,8 +21,10 @@ func _physics_process(delta):
 
 	if movedir == Vector2.ZERO:
 		anim_switch("idle")
-	else:
+	elif movedir == Vector2.RIGHT:
 		anim_switch("walk")
+	elif movedir == Vector2.LEFT:
+		anim_switch("walk", true)
 
 # controls_loop looks for player input
 func controls_loop():
@@ -51,3 +53,6 @@ func controls_loop():
 	# left and right keys at the same time
 	movedir.x = -int(LEFT) + int(RIGHT)
 	movedir.y = -int(UP) + int(DOWN)
+
+func die():
+	get_tree().reload_current_scene()
