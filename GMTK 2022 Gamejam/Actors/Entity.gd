@@ -12,16 +12,15 @@ onready var HITSTUN = 10
 # MOVEMENT
 var movedir = Vector2.ZERO
 var knockdir = Vector2.ZERO
-var spritedir = "left"
+var spritedir = "down"
 var movetimer = 0
 var movetimer_length = 0
-var movetimer_range
 var movetarget_radius
 var movetarget_radius_range
 var rng = RandomNumberGenerator.new()
 
 var hitstun = 0
-var health = 1
+var health = 3
 
 
 # Putting this here so that we can setup future calls from the
@@ -38,8 +37,7 @@ func movement_loop():
 		motion = movedir.normalized() * SPEED
 	else:
 		motion = knockdir.normalized() * SPEED * 1.5
-		anim_switch("idle")
-
+		anim_switch("damage")
 
 	# move_and_slide takes care of collisions and has you slide
 	# along walls that are blocking your path
@@ -51,24 +49,28 @@ func spritedir_loop():
 	
 	match movedir:
 		Vector2.LEFT:
-			spritedir = "left"
+			spritedir = "_left"
 		Vector2.RIGHT:
-			spritedir = "right"
+			spritedir = "_right"
+		Vector2.UP:
+			spritedir = "_up"
+		Vector2.DOWN:
+			spritedir = "_down"
 
 # This changes our player animation.  "animation" is a string
 # of the sort "idle", "push", or "walk"
-func anim_switch(animation, backwards = false):
-	
-	if $anim.current_animation != animation:
-		if backwards:
-			$anim.play_backwards(animation)
-		else:
-			$anim.play(animation)
+func anim_switch(animation):
+	var newanim = str(animation, spritedir)
+	if $anim.current_animation != newanim:
+		$anim.play(newanim)
 
 func damage_loop():
 	# If you're in hitstun countdown the timer
 	if hitstun > 0:
 		hitstun -= 1
+		
+	if hitstun == 0 and knockdir != Vector2.ZERO:
+		knockdir = Vector2.ZERO
 
 	# for any body that is overlapping the entity's hitbox
 	for body in $HitBox.get_overlapping_bodies():
@@ -84,6 +86,8 @@ func handle_damage(body):
 			# decrease health by the body's damage
 			health -= body.get("DAMAGE")
 			
+			anim_switch("damage")
+			
 			if health <= 0:
 				die()
 			
@@ -94,6 +98,8 @@ func handle_damage(body):
 			knockdir = transform.origin - body.transform.origin
 
 func die():
+	anim_switch("bonk")
+	yield(get_tree().create_timer(1), "timeout")
 	queue_free()
 
 
@@ -115,27 +121,32 @@ func rand_direction(dir_list):
 	# return a random element from the list
 	return(random_dir_list[index])
 
-func reset_movetimer(flag_list = []):
-	if movetimer_range and not "ignore_range" in flag_list:
-		# return a random number between movetimer_range[0] and movetimer_range[1] inclusive
-		movetimer = rng.randi_range(movetimer_range[0], movetimer_range[1])
-	else:
-		movetimer = movetimer_length
+func reset_movetimer():
+	movetimer = movetimer_length
 
-func loop_random_direction(dir_list, flag_list = []):
+func loop_random_direction(dir_list):
 	if movetimer > 0:
 		movetimer -= 1
-	if movetimer == 0 || is_on_wall():
+	if movetimer == 0:
 		movedir = rand_direction(dir_list)
-		anim_switch("walk")
-		reset_movetimer(flag_list)
+		reset_movetimer()
 
 
 func loop_follow_target(target = player):
-	var multiplier = 0
 	if movetimer > 0:
 		movetimer -= 1
-	if movetimer == 0 || is_on_wall():
-		var targetdir = target.global_position - global_position
-		anim_switch("walk")
-		movedir = targetdir.normalized()
+	if movetimer == 0:
+		
+		var xdif = target.global_position.x - global_position.x
+		var ydif = target.global_position.y - global_position.y
+		
+		if xdif > 0 and abs(xdif) >= abs(ydif):
+			movedir = Vector2.RIGHT
+		elif xdif < 0 and abs(xdif) >= abs(ydif):
+			movedir = Vector2.LEFT
+		elif ydif > 0 and abs(ydif) >= abs(xdif):
+			movedir = Vector2.DOWN
+		elif ydif < 0 and abs(ydif) >= abs(xdif):
+			movedir = Vector2.UP
+		
+		reset_movetimer()
